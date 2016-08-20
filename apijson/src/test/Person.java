@@ -1,10 +1,14 @@
 package test;
 
+import java.util.List;
+
 public class Person {
 
 	private int id;
 	private String name;
 	private boolean news;
+	private Person Father;
+	private List<Person> children;
 
 	public Person() {
 
@@ -32,6 +36,22 @@ public class Person {
 
 	public void setNews(boolean news) {
 		this.news = news;
+	}
+
+	public Person getFather() {
+		return Father;
+	}
+
+	public void setFather(Person father) {
+		Father = father;
+	}
+
+	public List<Person> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<Person> children) {
+		this.children = children;
 	}
 
 }
