@@ -5,12 +5,34 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class JsonUtil {
+
+	private static final Logger LOGGER = Logger.getLogger(JsonUtil.class
+			.getName());
 
 	public static void convertObjectToJson(Object object, OutputStream output)
 			throws IOException, IllegalArgumentException,
 			IllegalAccessException {
+
+		LOGGER.info("Log API: " + LOGGER.getName());
+
+		if (object == null) {
+
+			LOGGER.warning("Log Api: Parameter Object is null, NullPointerException occur");
+
+			throw new NullPointerException("Object is null");
+		}
+
+		if (output == null) {
+
+			LOGGER.warning("Parameter Output is null, NullPointerException occur");
+
+			throw new NullPointerException("Object Output is null");
+		}
+
+		LOGGER.info("Log Api: Start converter Object");
 
 		output.write(getAttributes(object).getBytes());
 
@@ -21,11 +43,15 @@ public class JsonUtil {
 
 		if (object == null) {
 
+			LOGGER.info("Log Api: Object attribute is null");
+
 			return "";
 
 		}
 
 		if (List.class.isInstance(object)) {
+
+			LOGGER.info("Log Api: Conveting Attribute type List");
 
 			List<Object> list = List.class.cast(object);
 
@@ -42,9 +68,8 @@ public class JsonUtil {
 		} else
 
 		{
-
+			LOGGER.info("Log Api: Conveting Attribute");
 			return getObjects(object);
-
 		}
 
 	}
@@ -55,6 +80,9 @@ public class JsonUtil {
 		List<String> attributes = new ArrayList<String>();
 
 		for (Field field : object.getClass().getDeclaredFields()) {
+
+			LOGGER.info("Log Api: Get Field: " + object.getClass() + " "
+					+ field.getName());
 
 			Object value = getValue(object, field);
 

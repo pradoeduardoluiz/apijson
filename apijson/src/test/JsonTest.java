@@ -8,8 +8,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.google.gson.Gson;
-
 import api.JsonUtil;
 
 public class JsonTest {
@@ -17,7 +15,58 @@ public class JsonTest {
 	OutputStreamUtil output = null;
 
 	@Test
-	public void testConvertPojoToJsonPrimitive() {
+	public void testNullObject() {
+
+		output = new OutputStreamUtil();
+
+		Person person = null;
+
+		try {
+			JsonUtil.convertObjectToJson(person, output);
+			fail("Error converting object, Null Object!");
+		} catch (NullPointerException e) {
+			assertEquals("Object is null", e.getMessage());
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Test
+	public void testNullOutputObject() {
+
+		Person person = new Person();
+
+		person.setId(1);
+		person.setName("Luiz Eduardo do Prado");
+		person.setNews(true);
+		person.setFather(null);
+
+		try {
+			JsonUtil.convertObjectToJson(person, output);
+			fail("Error converting object, Null Output Object!");
+		} catch (NullPointerException e) {
+			assertEquals("Object Output is null", e.getMessage());
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Test
+	public void testConvertObjectToJsonPrimitive() {
+
+		String expected = "{\"id\":1,\"name\":\"Luiz Eduardo do Prado\",\"news\":true}";
 
 		output = new OutputStreamUtil();
 
@@ -31,12 +80,7 @@ public class JsonTest {
 		try {
 
 			JsonUtil.convertObjectToJson(person, output);
-
-			if (!output.getResult().equals(parseJsonGson(person))) {
-
-				fail("Objeto convertido esta errado");
-
-			}
+			assertEquals(expected, output.getResult());
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -54,16 +98,10 @@ public class JsonTest {
 
 	}
 
-	private String parseJsonGson(Object object) {
-		// TODO Auto-generated method stub
-
-		Gson gson = new Gson();
-
-		return gson.toJson(object);
-	}
-
 	@Test
-	public void testConvetPojoWithObjectComplexToJson() {
+	public void testConvetObjectToJsonComplex() {
+
+		String expected = "{\"id\":1,\"name\":\"Luiz Eduardo do Prado\",\"news\":true,\"Father\":{\"id\":2,\"name\":\"Raul do Prado\",\"news\":false}}";
 
 		output = new OutputStreamUtil();
 
@@ -82,6 +120,7 @@ public class JsonTest {
 
 		try {
 			JsonUtil.convertObjectToJson(person, output);
+			assertEquals(expected, output.getResult());
 
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
@@ -97,7 +136,10 @@ public class JsonTest {
 	}
 
 	@Test
-	public void testConvetPojoWithListToJson() {
+	public void testConvetObjectWithListToJson() {
+
+		String expected = "{\"id\":1,\"name\":\"Luiz Eduardo do Prado\",\"news\":true,\"Father\":{\"id\":2,\"name\":\"Raul do Prado\",\"news\":false},\"children\":[{\"id\":3,\"name\":\"Dante\",\"news\":false}]}";
+
 		output = new OutputStreamUtil();
 
 		Person person = new Person();
@@ -125,6 +167,7 @@ public class JsonTest {
 
 		try {
 			JsonUtil.convertObjectToJson(person, output);
+			assertEquals(expected, output.getResult());
 
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
@@ -141,6 +184,8 @@ public class JsonTest {
 
 	@Test
 	public void testConvertListObjectToJson() {
+
+		String expected = "[{\"id\":1,\"name\":\"Luiz Eduardo do Prado\",\"news\":true,\"Father\":{\"id\":2,\"name\":\"Raul do Prado\",\"news\":false}},{\"id\":2,\"name\":\"Raul do Prado\",\"news\":false},{\"id\":3,\"name\":\"Dante\",\"news\":false}]";
 
 		output = new OutputStreamUtil();
 
@@ -169,8 +214,7 @@ public class JsonTest {
 
 		try {
 			JsonUtil.convertObjectToJson(people, output);
-			System.out.println(parseJsonGson(people));
-			System.out.println(output.getResult());
+			assertEquals(expected, output.getResult());
 
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
